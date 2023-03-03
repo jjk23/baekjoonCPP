@@ -1,52 +1,40 @@
-#include<iostream>
- 
-#define endl "\n"
-#define MAX 301
+#include <iostream>
+#include <vector>
+
 using namespace std;
- 
-int N;
-int Arr[MAX];    // 계단을 나타내는 배열
-int DP[MAX];    // 해당 계단까지의 Max값을 나타내는 배열
- 
-int Max(int A, int B) { if (A > B) return A; return B; }
- 
-void Input()
-{
-    cin >> N;
-    for (int i = 1; i <= N; i++)
-    {
-        cin >> Arr[i];
-    }
-}
- 
-void Solution()
-{
-    DP[1] = Arr[1];    // 첫 번째 계단까지의 Max 값은 첫번째 계단 값이지
-    DP[2] = Arr[1] + Arr[2];
-    DP[3] = Max(Arr[1] + Arr[3], Arr[2] + Arr[3]);
-    
-    for (int i = 4; i <= N; i++)
-    {
-        DP[i] = Max(DP[i - 2] + Arr[i], DP[i - 3] + Arr[i-1] + Arr[i]);
-    }
- 
-    cout << DP[N] << endl;
-}
- 
-void Solve()
-{
-    Input();
-    Solution();
-}
- 
-int main(void)
-{
-    ios::sync_with_stdio(false);
+
+int stairCnt;
+vector<int> stairs;
+vector<int> dp;
+
+/**
+ 1. 계단은 한 번에 한 계단씩 또는 두 계단씩 오를 수 있다. 즉, 한 계단을 밟으면서 이어서 다음 계단이나, 다음 다음 계단으로 오를 수 있다.
+ 2. 연속된 세 개의 계단을 모두 밟아서는 안 된다. 단, 시작점은 계단에 포함되지 않는다.
+ 3. 마지막 도착 계단은 반드시 밟아야 한다.
+ **/
+
+int main() {
+    ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     cout.tie(NULL);
- 
-    //freopen("Input.txt", "r", stdin);
-    Solve();
-    
+
+    cin >> stairCnt;
+    dp.resize(stairCnt);
+
+    int num;
+    for(int i = 0; i < stairCnt; i++) {
+        cin >> num;
+        stairs.push_back(num);
+    }
+
+    dp[0] = stairs[0];
+    dp[1] = max(stairs[1], stairs[0]+stairs[1]);
+    dp[2] = max(stairs[1]+stairs[2], stairs[0]+stairs[2]);
+
+    for(int i = 3; i < stairCnt; i++) {
+        dp[i] = max(dp[i-2]+stairs[i], dp[i-3]+stairs[i-1]+stairs[i]);
+    }
+
+    cout << dp[stairCnt-1] << endl;
     return 0;
 }
